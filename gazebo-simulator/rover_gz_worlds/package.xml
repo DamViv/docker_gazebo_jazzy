@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+    <name>rover_gz_worlds</name>
+    <version>2.0.0</version>
+
+    <description>Gazebo worlds for Rover simulation in ROS 2</description>
+
+    <maintainer email="damien.vivet@isae.Fr">ISAE-SUPAERO</maintainer>
+    <license>MIT</license>
+    <author email="damien.vivet@isae.Fr">Damien Vivet</author>
+
+    <buildtool_depend>ament_cmake</buildtool_depend>
+    <test_depend>ament_lint_auto</test_depend>
+    <test_depend>ament_cmake_copyright</test_depend>
+    <test_depend>ament_cmake_lint_cmake</test_depend>
+    <test_depend>ament_cmake_xmllint</test_depend>
+
+    <export>
+        <build_type>ament_cmake</build_type>
+        <architecture_independent/>
+    </export>
+</package>

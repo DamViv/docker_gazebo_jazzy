@@ -1,0 +1,28 @@
+name: ros-jazzy-img
+
+services:
+  jazzy-image:
+    image: ros-jazzy-img
+    volumes:
+      #full dev
+      - /dev:/dev:rw
+      #full media
+      - /media:/media:rw
+      #Time
+      - /etc/timezone:/etc/timezone:rw
+      - /etc/localtime:/etc/localtime:rw
+      #ros-workspaces
+      - ~/ros_jazzy_ws:/root/ros_jazzy_ws:rw
+    privileged: true
+    network_mode: host
+    ports:
+        - "8000:8000"
+        - "9000:9000"
+        - "8080:8080"
+    ipc: host
+    stdin_open: true
+    tty: true
+    environment:
+      - DISPLAY
+      - QT_X11_NO_MITSHM=1
+    entrypoint: /bin/bash
