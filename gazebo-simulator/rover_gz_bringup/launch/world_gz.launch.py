@@ -37,12 +37,6 @@ def generate_launch_description():
     pkg_project_gazebo = get_package_share_directory("rover_gz_bringup")
     pkg_project_worlds = get_package_share_directory("rover_gz_worlds")
 
-    sim_world = DeclareLaunchArgument(
-        "sim_world",
-        default_value=os.path.join(pkg_project_worlds, "worlds", "marsyard2022.sdf"),
-        description="Path to the Gazebo world file",
-    )
-
     robot_ns = DeclareLaunchArgument(
         "robot_ns",
         default_value="",
@@ -55,8 +49,12 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(
             os.path.join(pkg_ros_gz_sim, "launch", "gz_sim.launch.py")
         ),
-        launch_arguments={"gz_args": LaunchConfiguration("sim_world")}.items(),
+        launch_arguments={"gz_args": "marsyard2020.sdf -r"}.items(),
     )
+    # -r autoplay when gazebo is launched
+    # -s run without the GUI
+    # if there is a need to run gazebo without the GUI and only the sensors (increases performance), 
+    # use "marsyard2022.sdf -r -s" in the launch arguments above.
 
 
     # Bridge ROS topics and Gazebo messages for establishing communication
@@ -66,6 +64,7 @@ def generate_launch_description():
         name="clock_bridge",
         arguments=[
             "/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock",
+            "tf@tf2_msgs/msg/TFMessage[ignition.msgs.Pose_V",
         ],
         parameters=[
             {
@@ -77,7 +76,6 @@ def generate_launch_description():
 
     return LaunchDescription(
         [
-            sim_world,
             robot_ns,
             gz_sim,
             topic_bridge,
