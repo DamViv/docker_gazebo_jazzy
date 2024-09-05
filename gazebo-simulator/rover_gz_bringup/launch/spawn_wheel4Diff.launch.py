@@ -23,7 +23,7 @@ robot_model_type = "model"
 
 def spawn_robot(context: LaunchContext, namespace: LaunchConfiguration):
     pkg_project_description = get_package_share_directory("wheel_4_differential")
-    robot_ns = "ns123"
+    robot_ns = "robot_0/"
     robot_idx_str = robot_ns[-2]
     robot_idx = int(robot_idx_str)
 
@@ -76,8 +76,8 @@ def spawn_robot(context: LaunchContext, namespace: LaunchConfiguration):
         executable="parameter_bridge",
         name="parameter_bridge" + robot_idx_str,
         arguments=[
-            robot_ns + "/cmd_vel@geometry_msgs/msg/Twist]gz.msgs.Twist",
-            robot_ns + "/odom@nav_msgs/msg/Odometry[gz.msgs.Odometry",
+            robot_ns + "cmd_vel_nav@geometry_msgs/msg/Twist]gz.msgs.Twist",
+            robot_ns + "odom@nav_msgs/msg/Odometry[gz.msgs.Odometry",
             robot_ns + "ground_truth_pose@nav_msgs/msg/Odometry[gz.msgs.Odometry",
             robot_ns + "imu@sensor_msgs/msg/Imu[gz.msgs.IMU",
             robot_ns + "joint_states@sensor_msgs/msg/JointState[gz.msgs.Model",
@@ -124,7 +124,7 @@ def spawn_robot(context: LaunchContext, namespace: LaunchConfiguration):
         robot_state_publisher,
         topic_bridge,
         image_bridge_rgb,
-        #key_teleop_cmd,
+        key_teleop_cmd,
         bridge
     ]
 
