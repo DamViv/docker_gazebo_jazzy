@@ -55,6 +55,7 @@ RUN     cd ceres-solver-2.2.0 \
         &&  make install
 
 # Add other programs to end so that it does not build the entire thing
+# for launching terminal (for teleop)
 RUN apt-get update && apt-get install xterm -y
 
 # Use root user & define working environment

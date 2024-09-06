@@ -63,13 +63,13 @@ def spawn_robot(context: LaunchContext, namespace: LaunchConfiguration):
         executable="parameter_bridge",
         name=node_name_prefix + "parameter_bridge",
         arguments=[
-            robot_ns + "/cmd_vel@geometry_msgs/msg/Twist]gz.msgs.Twist",
-            robot_ns + "/odom@nav_msgs/msg/Odometry[gz.msgs.Odometry",
-            robot_ns + "/tf@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V",
-            robot_ns + "/imu/data_raw@sensor_msgs/msg/Imu[gz.msgs.IMU",
+            robot_ns + "cmd_vel@geometry_msgs/msg/Twist]gz.msgs.Twist",
+            robot_ns + "odom@nav_msgs/msg/Odometry[gz.msgs.Odometry",
+            robot_ns + "tf@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V",
+            robot_ns + "imu/data_raw@sensor_msgs/msg/Imu[gz.msgs.IMU",
             robot_ns
-            + "/camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo",
-            robot_ns + "/joint_states@sensor_msgs/msg/JointState[gz.msgs.Model",
+            + "camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo",
+            robot_ns + "joint_states@sensor_msgs/msg/JointState[gz.msgs.Model",
         ],
         parameters=[
             {
@@ -84,14 +84,26 @@ def spawn_robot(context: LaunchContext, namespace: LaunchConfiguration):
         package="ros_gz_image",
         executable="image_bridge",
         name=node_name_prefix + "image_bridge",
-        arguments=[robot_ns + "/camera/image_raw"],
+        arguments=[robot_ns + "camera/image_raw"],
         output="screen",
     )
+
+
+    key_teleop_cmd = Node(
+        package="teleop_twist_keyboard",
+        executable="teleop_twist_keyboard",
+        namespace=robot_ns,
+        parameters=[{'speed': '0.4'}],
+        prefix=["xterm -e"],
+        #remappings=[('cmd_vel', 'cmd_vel')],
+    )
+
     return [
         robot_state_publisher,
         scout_rover,
         topic_bridge,
         image_bridge,
+        key_teleop_cmd,
     ]
 
 

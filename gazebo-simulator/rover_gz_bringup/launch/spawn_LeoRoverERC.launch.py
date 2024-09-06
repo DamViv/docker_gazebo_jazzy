@@ -87,9 +87,10 @@ def spawn_robot(context: LaunchContext, namespace: LaunchConfiguration):
             robot_ns + "/cmd_vel@geometry_msgs/msg/Twist]gz.msgs.Twist",
             robot_ns + "/odom@nav_msgs/msg/Odometry[gz.msgs.Odometry",
             robot_ns + "/tf@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V",
-            robot_ns + "/imu/data_raw@sensor_msgs/msg/Imu[gz.msgs.IMU",
+            robot_ns + "/imu/data_raw@sensor_msgs/msg/Imu[gz.msgs.IMU",            
             robot_ns + "/camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo",
             robot_ns + "/joint_states@sensor_msgs/msg/JointState[gz.msgs.Model",
+            robot_ns + "/zed2/imu/data@sensor_msgs/msg/Imu[gz.msgs.IMU"                        
         ],
         parameters=[
             {
@@ -103,15 +104,54 @@ def spawn_robot(context: LaunchContext, namespace: LaunchConfiguration):
     image_bridge = Node(
         package="ros_gz_image",
         executable="image_bridge",
-        name=node_name_prefix + "image_bridge",
+        name=node_name_prefix + "image_bridge2",
         arguments=[robot_ns + "/camera/image_raw"],
         output="screen",
     )
+
+    # Camera image bridge
+    zed_image_bridge = Node(
+        package="ros_gz_image",
+        executable="image_bridge",
+        name=node_name_prefix + "image_bridge",
+        arguments=[
+            robot_ns + "zed2/right/image_rect_color",
+            robot_ns + "zed2/right/image_raw_color",
+            robot_ns + "zed2/left/image_rect_color",
+            robot_ns + "zed2/left/image_raw_color",            
+        ],
+
+            
+        output="screen",
+    )
+    zed_depth_bridge = Node(
+        package='ros_gz_image',
+        executable='image_bridge',
+        name=node_name_prefix + "image_bridge",
+        arguments=[
+            robot_ns + 'zed2/depth'
+            ],
+        output='screen'
+    )
+
+    key_teleop_cmd = Node(
+        package="teleop_twist_keyboard",
+        executable="teleop_twist_keyboard",
+        namespace=robot_ns,
+        parameters=[{'speed': '0.4'}],
+        prefix=["xterm -e"],
+        remappings=[('cmd_vel', 'cmd_vel')],
+    )
+
+
     return [
         robot_state_publisher,
         leo_rover,
         topic_bridge,
         image_bridge,
+        zed_image_bridge,
+        zed_depth_bridge,
+        key_teleop_cmd
     ]
 
 
