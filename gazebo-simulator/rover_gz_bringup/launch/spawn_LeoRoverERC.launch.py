@@ -115,10 +115,10 @@ def spawn_robot(context: LaunchContext, namespace: LaunchConfiguration):
         executable="image_bridge",
         name=node_name_prefix + "image_bridge",
         arguments=[
-            robot_ns + "zed2/right/image_rect_color",
-            robot_ns + "zed2/right/image_raw_color",
-            robot_ns + "zed2/left/image_rect_color",
-            robot_ns + "zed2/left/image_raw_color",            
+            robot_ns + "/zed2/right/image_rect_color",
+            robot_ns + "/zed2/right/image_raw_color",
+            robot_ns + "/zed2/left/image_rect_color",
+            robot_ns + "/zed2/left/image_raw_color",            
         ],
 
             
@@ -129,7 +129,7 @@ def spawn_robot(context: LaunchContext, namespace: LaunchConfiguration):
         executable='image_bridge',
         name=node_name_prefix + "image_bridge",
         arguments=[
-            robot_ns + 'zed2/depth'
+            robot_ns + '/zed2/depth'
             ],
         output='screen'
     )
