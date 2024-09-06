@@ -61,6 +61,7 @@ def spawn_robot(context: LaunchContext, namespace: LaunchConfiguration):
             {"robot_description": robot_desc},
         ],
     )
+
     # Spawn a robot inside a simulation
     leo_rover = Node(
         namespace=robot_ns,
@@ -78,6 +79,8 @@ def spawn_robot(context: LaunchContext, namespace: LaunchConfiguration):
         ],
     )
 
+
+
     # Bridge ROS topics and Gazebo messages for establishing communication
     topic_bridge = Node(
         package="ros_gz_bridge",
@@ -89,8 +92,11 @@ def spawn_robot(context: LaunchContext, namespace: LaunchConfiguration):
             robot_ns + "/tf@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V",
             robot_ns + "/imu/data_raw@sensor_msgs/msg/Imu[gz.msgs.IMU",            
             robot_ns + "/camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo",
+            robot_ns + "/zed2/right/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo",
+            robot_ns + "/zed2/left/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo",            
             robot_ns + "/joint_states@sensor_msgs/msg/JointState[gz.msgs.Model",
-            robot_ns + "/zed2/imu/data@sensor_msgs/msg/Imu[gz.msgs.IMU"                        
+            robot_ns + "/zed2/imu/data@sensor_msgs/msg/Imu[gz.msgs.IMU", 
+            robot_ns + "/zed2/depth/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCLoud2",
         ],
         parameters=[
             {

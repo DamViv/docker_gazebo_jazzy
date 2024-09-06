@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
+
+
+  <!--##########-->
+  <!-- LEO ERC -->
+  <!--##########-->
   <xacro:macro name="leo_erc" 
                params="default_antenna:=true
                        rockers_fixed:=true
@@ -97,7 +102,7 @@
       </link>
     </xacro:macro>
 
-    <!-- LINKS -->
+    <!-- links -->
     <xacro:if value="${footprint_link}">
       <link name="${link_prefix}base_footprint"/>
     </xacro:if>
@@ -286,8 +291,13 @@
 
   </xacro:macro>
 
-  <!-- LEO GAZEBO -->
 
+
+
+
+  <!--##########-->
+  <!-- LEO GAZEBO -->
+  <!--##########-->
   <xacro:macro name="leo_gazebo"
                params="robot_ns:='''">
 
@@ -454,7 +464,7 @@
       </collision>
     </gazebo>
 
-    <!-- camera -->
+    <!-- Leo camera -->
     <gazebo reference="${link_prefix}camera_frame">
       <sensor name="camera" type="camera">
           <camera name="leo_camera">
@@ -507,6 +517,7 @@
       </plugin>
     </gazebo>
 
+    <!-- Leo IMU -->
     <gazebo reference="${link_prefix}imu_frame">
       <sensor type="imu" name="leo_imu_sensor">
         <update_rate>100</update_rate>
@@ -516,8 +527,10 @@
         <gz_frame_id>${link_prefix}imu_frame</gz_frame_id>
       </sensor>
     </gazebo>
-    <gazebo>
     
+
+
+    <gazebo>
       <plugin
         filename="libignition-gazebo-diff-drive-system.so"
         name="ignition::gazebo::systems::DiffDrive">
@@ -541,6 +554,13 @@
     </gazebo>
   </xacro:macro>
 
+
+
+
+
+  <!--##########-->
+  <!--  LEO SIM -->
+  <!--##########-->
   <xacro:macro name="leo_sim" 
                params="default_antenna:=true 
                        fixed:=false
@@ -567,12 +587,21 @@
         <origin xyz="0.0 0.0 1.0"/>
       </joint>
     </xacro:if>
-  
   </xacro:macro>
   
-  <xacro:include filename="$(find leo_erc_description)/urdf/zed2.xacro"/>
 
-  <xacro:macro name="zed2_gazebo" 
+
+
+
+
+
+  
+
+
+  <!--##########-->
+  <!-- ZED2 GAZEBO-->
+  <!--##########-->
+  <xacro:macro name="zed2_leo_gazebo" 
                params="default_antenna:=true
                        robot_ns:=''
                        rockers_fixed:=true
@@ -582,73 +611,82 @@
                        imu_translation:='0.0628 -0.0314 -0.0393'
                        mecanum_wheels:=false">   
 
-  <joint name="${joint_prefix}erc_payload_joint" type="fixed">
-    <origin xyz="0 0 0" rpy="0 0 0"/>
-    <parent link="${link_prefix}base_link"/>
-    <child link="${link_prefix}erc_payload_link"/>
-  </joint>
+    <joint name="${joint_prefix}erc_payload_joint" type="fixed">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <parent link="${link_prefix}base_link"/>
+      <child link="${link_prefix}erc_payload_link"/>
+    </joint>
 
-  <link name="${link_prefix}erc_payload_link">
-    <inertial>
-      <mass value="1.33042"/>
-      <origin xyz="-0.055949 0.001702 0.064261"/>
-      <inertia
-        ixx="0.007414" ixy="0.00007852" ixz="-0.003995"
-        iyy="0.01745" iyz="-0.00001858"
-        izz="0.01187"/>
-    </inertial>
-    <visual>
-      <geometry>
-        <mesh filename="package://leo_description/models/ERC2021payload.dae"/>
-      </geometry>
-    </visual>
-    <collision>
-      <geometry>
-        <mesh filename="package://leo_description/models/ERC2021payload_outline.dae"/>
-      </geometry>
-    </collision>
-  </link>
+    <link name="${link_prefix}erc_payload_link">
+      <inertial>
+        <mass value="1.33042"/>
+        <origin xyz="-0.055949 0.001702 0.064261"/>
+        <inertia
+          ixx="0.007414" ixy="0.00007852" ixz="-0.003995"
+          iyy="0.01745" iyz="-0.00001858"
+          izz="0.01187"/>
+      </inertial>
+      <visual>
+        <geometry>
+          <mesh filename="package://leo_description/models/ERC2021payload.dae"/>
+        </geometry>
+      </visual>
+      <collision>
+        <geometry>
+          <mesh filename="package://leo_description/models/ERC2021payload_outline.dae"/>
+        </geometry>
+      </collision>
+    </link>
 
-  <joint name="${joint_prefix}zed2_tilt_head_joint" type="fixed">
-    <origin xyz="0.048 0 0.141" rpy="0 0.415911961 0"/> <!-- 23.83 degree tilt -->
-    <parent link="${link_prefix}erc_payload_link"/>
-    <child link="${link_prefix}zed2_tilt_head_link"/>
-  </joint>
+    <joint name="${joint_prefix}zed2_tilt_head_joint" type="fixed">
+      <origin xyz="0.048 0 0.141" rpy="0 0.415911961 0"/> <!-- 23.83 degree tilt -->
+      <parent link="${link_prefix}erc_payload_link"/>
+      <child link="${link_prefix}zed2_tilt_head_link"/>
+    </joint>
 
-  <link name="${link_prefix}zed2_tilt_head_link">
-    <inertial>
-      <mass value="0.108614"/>
-      <origin xyz="0 -0.008564 0.015313"/>
-      <inertia
-        ixx="7.371e-5" ixy="0.0" ixz="1.326071e-6"
-        iyy="3.14e-5" iyz="-1.424e-5"
-        izz="6.13e-5"/>
-    </inertial>
-    <visual>
-      <origin xyz="0 0 0" rpy="0 0 ${pi}"/>
-      <geometry>
-        <mesh filename="package://leo_description/models/Manfrotto_head.dae"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="0 0 0" rpy="0 0 ${pi}"/>
-      <geometry>
-        <mesh filename="package://leo_description/models/Manfrotto_head.dae"/>
-      </geometry>
-    </collision>
-  </link>
+    <link name="${link_prefix}zed2_tilt_head_link">
+      <inertial>
+        <mass value="0.108614"/>
+        <origin xyz="0 -0.008564 0.015313"/>
+        <inertia
+          ixx="7.371e-5" ixy="0.0" ixz="1.326071e-6"
+          iyy="3.14e-5" iyz="-1.424e-5"
+          izz="6.13e-5"/>
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 ${pi}"/>
+        <geometry>
+          <mesh filename="package://leo_description/models/Manfrotto_head.dae"/>
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 ${pi}"/>
+        <geometry>
+          <mesh filename="package://leo_description/models/Manfrotto_head.dae"/>
+        </geometry>
+      </collision>
+    </link>
 
-  <joint name="${joint_prefix}zed2_camera_center_joint" type="fixed">
-    <parent link="${link_prefix}zed2_tilt_head_link"/>
-    <child link="${link_prefix}zed2_camera_center"/>
-    <origin xyz="0 0 0.0486" rpy="0 0.032637657 0"/>
-  </joint>
+    <joint name="${joint_prefix}zed2_camera_center_joint" type="fixed">
+      <parent link="${link_prefix}zed2_tilt_head_link"/>
+      <child link="${link_prefix}zed2_camera_center"/>
+      <origin xyz="0 0 0.0486" rpy="0 0.032637657 0"/>
+    </joint>
 
-  <xacro:zed2 link_prefix="${link_prefix}" 
-              joint_prefix="${joint_prefix}"/>
+    <xacro:zed2 link_prefix="${link_prefix}" 
+                joint_prefix="${joint_prefix}"/>
 
- </xacro:macro>
+    <xacro:zed2_gazebo link_prefix="${link_prefix}" 
+                joint_prefix="${joint_prefix}"/>
 
+  </xacro:macro>
+
+
+
+
+  <!--##########-->
+  <!--  LEO ERC GAZEBO -->
+  <!--##########-->
   <xacro:macro name="leo_erc_gazebo"
                params="robot_ns:=''">
 
@@ -659,8 +697,6 @@
 
     <xacro:leo_gazebo robot_ns="${robot_ns}"/>
 
-    <xacro:zed2_gazebo robot_ns="${robot_ns}"/>
-
     <gazebo>
       <plugin
         filename="ignition-gazebo-joint-state-publisher-system"
@@ -668,10 +704,14 @@
         <topic>${link_prefix}joint_states</topic>
       </plugin>
     </gazebo>
-
   </xacro:macro>
 
 
+
+
+  <!--##########-->
+  <!--  LEO ERC SIM -->
+  <!--##########-->
   <xacro:macro name="leo_erc_sim" 
                params="default_antenna:=true
                        fixed:=false
@@ -690,6 +730,7 @@
 
     <xacro:leo_erc_gazebo robot_ns="${robot_ns}"/>
 
+
     <xacro:if value="${fixed}">
       <link name="world"/>
       <joint name="fixed" type="fixed">
@@ -697,8 +738,12 @@
         <child link="${link_prefix}base_footprint"/>
         <origin xyz="0.0 0.0 1.0"/>
       </joint>
-    </xacro:if>
-  
+    </xacro:if>  
+
   </xacro:macro>
+
+
+
+
 
 </robot>

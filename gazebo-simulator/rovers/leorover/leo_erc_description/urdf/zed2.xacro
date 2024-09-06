@@ -3,6 +3,10 @@
 
   <xacro:property name="baseline" value="0.12"/>
 
+
+ <!--##########-->
+ <!--  ZED2 -->
+ <!--##########-->
   <xacro:macro name="zed2" 
                params="link_prefix:=''
                        joint_prefix:=''">
@@ -99,8 +103,19 @@
   </xacro:macro>
 
 
+
+ <!--##########-->
+ <!--  ZED2 GAZEBO -->
+ <!--##########-->
   <xacro:macro name="zed2_gazebo"
-               params="robot_ns:=''">
+               params="default_antenna:=true
+                       robot_ns:=''
+                       rockers_fixed:=true
+                       footprint_link:=true
+                       link_prefix:=''
+                       joint_prefix:=''
+                       imu_translation:='0.0628 -0.0314 -0.0393'
+                       mecanum_wheels:=false">  
 
     <xacro:property name="link_prefix" value=""/>
     <xacro:if value="${robot_ns != '' and robot_ns != '/'}">
@@ -108,14 +123,14 @@
     </xacro:if>
 
 
-    <!-- IMU -->
+    <!-- IMU -->    
     <gazebo reference="${link_prefix}zed2_left_camera_frame">
       <sensor type="imu" name="zed2_imu_sensor">
-        <always_on>true</always_on>
-        <update_rate>50</update_rate>
+        <update_rate>100</update_rate>
         <visualize>true</visualize>
         <topic>${link_prefix}zed2/imu/data</topic>   
-        <gz_frame_id>${link_prefix}zed2_left_camera_frame</gz_frame_id>             
+        <always_on>1</always_on>
+        <gz_frame_id>${link_prefix}zed2_left_camera_frame</gz_frame_id>   
       </sensor>
     </gazebo>
 
@@ -183,48 +198,31 @@
         <gz_frame_id>${link_prefix}zed2_left_camera_frame</gz_frame_id>             
       </sensor>
 
-      <sensor type="depth" name="zed2_depth_camera">
+      <sensor type="depth_camera" name="zed2_depth_camera">
         <!-- Rectified images, Depth images, Point Clouds -->
-        <always_on>true</always_on>
-        <update_rate>15.0</update_rate>
+        <always_on>1</always_on>
+        <update_rate>15</update_rate>
         <visualize>true</visualize> 
         <camera name="zed2_depth">
-          <horizontal_fov>1.7633</horizontal_fov>
+          <horizontal_fov>1.274</horizontal_fov>
           <image>
-            <width>1280</width>
-            <height>720</height>
-            <format>R8G8B8</format>
+            <width>640</width>
+            <height>480</height>
+            <format>R_FLOAT32</format>
           </image>
           <clip>
-            <near>0.02</near>
-            <far>300</far>
+            <near>0.1</near>
+            <far>20</far>
           </clip>
           <noise>
             <type>gaussian</type>
             <mean>0.0</mean>
-            <stddev>0.007</stddev>
+            <stddev>0.01</stddev>
           </noise>
         </camera>
         <topic>${link_prefix}zed2/depth</topic>
-        <gz_frame_id>${link_prefix}zed2_left_camera_frame</gz_frame_id>             
-
-        <!-- <plugin name="camera_controller" filename="libgazebo_ros_openni_kinect.so">
-          <robotNamespace>${robot_ns}</robotNamespace>
-          <cameraName>zed2</cameraName>
-          <imageTopicName>left/image_rect_color</imageTopicName>
-          <cameraInfoTopicName>left/camera_info</cameraInfoTopicName>
-          <depthImageTopicName>depth/depth_registered</depthImageTopicName>
-          <depthImageInfoTopicName>depth/camera_info</depthImageInfoTopicName>
-          <pointCloudTopicName>point_cloud/cloud_registered</pointCloudTopicName>
-          <pointCloudCutoff>0.3</pointCloudCutoff>
-          <pointCloudCutoffMax>20.0</pointCloudCutoffMax>
-          <frameName>zed2_left_camera_optical_frame</frameName>
-          <baseline>0.12</baseline>
-          <CxPrime>658.8206787109375</CxPrime>
-          <Cx>658.8206787109375</Cx>
-          <Cy>372.25787353515625</Cy>
-          <hackBaseline>0.0</hackBaseline>
-        </plugin> -->
+        <pointCloudTopicName>${link_prefix}zed2/depth/points</pointCloudTopicName>
+        <gz_frame_id>${link_prefix}zed2_left_camera_frame</gz_frame_id>
       </sensor>
     </gazebo>
 
