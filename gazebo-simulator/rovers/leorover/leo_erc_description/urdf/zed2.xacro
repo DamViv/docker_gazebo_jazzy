@@ -111,10 +111,11 @@
     <!-- IMU -->
     <gazebo reference="${link_prefix}zed2_left_camera_frame">
       <sensor type="imu" name="zed2_imu_sensor">
-        <always_on>1</always_on>
+        <always_on>true</always_on>
         <update_rate>50</update_rate>
-        <visualize>false</visualize>
-        <topic>${link_prefix}zed2/imu/data</topic>                
+        <visualize>true</visualize>
+        <topic>${link_prefix}zed2/imu/data</topic>   
+        <gz_frame_id>${link_prefix}zed2_left_camera_frame</gz_frame_id>             
       </sensor>
     </gazebo>
 
@@ -153,6 +154,8 @@
           </distortion>
         </camera>
         <topic>${link_prefix}zed2/left/image_raw_color</topic>
+        <gz_frame_id>${link_prefix}zed2_left_camera_frame</gz_frame_id>             
+
         <!-- <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
           <robotNamespace>${robot_ns}</robotNamespace>
           <cameraName>zed2/left_raw</cameraName>
@@ -194,6 +197,8 @@
         <update_rate>15.0</update_rate>
         <visualize>true</visualize> 
         <topic>${link_prefix}zed2/left/image_rect_color</topic>
+        <gz_frame_id>${link_prefix}zed2_left_camera_frame</gz_frame_id>             
+
         <!-- <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
           <robotNamespace>${robot_ns}</robotNamespace>
           <cameraName>zed2/right</cameraName>
@@ -230,6 +235,8 @@
           </noise>
         </camera>
         <topic>${link_prefix}zed2/depth</topic>
+        <gz_frame_id>${link_prefix}zed2_left_camera_frame</gz_frame_id>             
+
         <!-- <plugin name="camera_controller" filename="libgazebo_ros_openni_kinect.so">
           <robotNamespace>${robot_ns}</robotNamespace>
           <cameraName>zed2</cameraName>
@@ -283,6 +290,8 @@
         <update_rate>15.0</update_rate>
         <visualize>true</visualize> 
         <topic>${link_prefix}zed2/right/image_raw_color</topic>
+        <gz_frame_id>${link_prefix}zed2_right_camera_frame</gz_frame_id>             
+
         <!-- <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
           <robotNamespace>${robot_ns}</robotNamespace>
           <cameraName>zed2/right_raw</cameraName>
@@ -326,6 +335,7 @@
         <update_rate>15.0</update_rate>
         <visualize>true</visualize> 
         <topic>${link_prefix}zed2/right/image_rect_color</topic>
+        <gz_frame_id>${link_prefix}zed2_right_camera_frame</gz_frame_id>             
         <!-- <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
           <robotNamespace>${robot_ns}</robotNamespace>
           <cameraName>zed2/right</cameraName>
