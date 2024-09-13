@@ -57,6 +57,7 @@ RUN     cd ceres-solver-2.2.0 \
 # Add other programs to end so that it does not build the entire thing
 # for launching terminal (for teleop)
 RUN apt-get update && apt-get install xterm -y
+RUn apt-get install -y nano ros-jazzy-rmw-cyclonedds-cpp
 
 # Use root user & define working environment
 USER root
@@ -67,6 +68,8 @@ WORKDIR /root/ros_jazzy_ws
 RUN /bin/bash -c "echo source /opt/ros/jazzy/setup.bash >> /root/.bashrc"
 RUN /bin/bash -c "echo source /root/ros_jazzy_ws/install/setup.bash >> /root/.bashrc"
 RUN /bin/bash -c "echo source /opt/ros/jazzy/setup.bash && cd /root/ros_jazzy_ws && colcon build"
+RUN /bin/bash -c "echo export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp >> /root/.bashrc"
+RUN /bin/bash -c "export CYCLONEDDS_URI=~/.ros/cyclonedds.xml >> /root/.bashrc"
 
 # Enter the docker in a terminal
 ENTRYPOINT ["/bin/bash"]
