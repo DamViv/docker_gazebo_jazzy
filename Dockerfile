@@ -58,6 +58,8 @@ RUN     cd ceres-solver-2.2.0 \
 # for launching terminal (for teleop)
 RUN apt-get update && apt-get install xterm -y
 
+RUN apt-get install ros-jazzy-grid-map -y
+
 # Use root user & define working environment
 USER root
 RUN mkdir -p /root/ros_jazzy_ws
